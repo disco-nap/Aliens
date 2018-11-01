@@ -1,47 +1,52 @@
 // from data.js
 var tableData = data;
 
-// YOUR CODE HERE!
 // Console.log the UFO sightings data table
-console.log(data);
+console.log(tableData);
 
-// Get a reference to the table body
+// Get a reference to the table body and the date field
 var tbody = d3.select("tbody");
+var date = d3.select('#datetime');
+
 
 // append a row to the table for each object
 // fill in each row with values from each object using cell.text
-data.forEach((ufoSighting) => {
+  data.forEach((ufoSighting) => {
     var row = tbody.append("tr");
     Object.entries(ufoSighting).forEach(([key, value]) => {
       var cell = tbody.append("td");
       cell.text(value);
-    });
+    })
   });
-  
 
-  // Select the filter button
-var submit = d3.select("filter-btn");
 
-// create function that filters by date field
-// replace the above appending of data value to only match objects with that date
+// Select the filter button
+var searchbtn = d3.select("#filter-btn");
 
-submit.on("click", function() {
+console.log(searchbtn);
 
-    // Prevent the page from refreshing
-    d3.event.preventDefault();
+// Use D3 `.on` to filter the data when the "Filter table" button is clicked
+searchbtn.on("click", () => {
+  d3.event.preventDefault(); 
+  var inputDate = date.property('value').trim();
+
+  // filter the data table to match search bar input 
+  var filterData = tableData.filter(tableData => tableData.datetime === inputDate);
+  console.log(filterData);
   
-    // Select the input element and get the raw HTML node
-    var inputElement = d3.select("#datetime");
-  
-    // Get the value property of the input element
-    var inputValue = inputElement.property("value");
-  
-    console.log(inputValue);
-  
-    var filteredData = data.filter(sighting => sighting.datetime === inputValue);
-  
-    console.log(filteredData);
+  // clear the full dataset
+  tbody.html("");
+
+  // refill in rows for the new filtered dataset
+  filterData.forEach((ufoSighting) => {
+    var row = tbody.append("tr");
+    Object.entries(ufoSighting).forEach(([key, value]) => {
+      var cell = tbody.append("td");
+      cell.text(value);
+    })
+  })
+
 
 });
-  
+
 
